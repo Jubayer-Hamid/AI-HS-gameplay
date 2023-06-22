@@ -1,6 +1,7 @@
 from q_network import DQLAgent, ReplayBuffer, Q_network, State
 from play import play_game
 import torch
+import os 
 
 
 
@@ -27,12 +28,26 @@ NUM_ACTIONS = 2048 # Number of possible combinations of bids
 NUMBERED_CARDS = [f'{i}' for i in range(1,11)]
 SPECIAL_POSITIVE_CARDS = ['x2', 'x2', 'x2']
 SPECIAL_NEGATIVE_CARDS = ['1/2', '-5', 'discard']
-    
+
 def train(training_episodes: int, num_players: int = 4):
+    weights_dir = 'Weights'
+    if not os.path.exists(weights_dir):
+        os.makedirs(weights_dir)
+
     agent = DQLAgent(state_size, action_size, hidden_size, batch_size, learning_rate, gamma, epsilon_start, epsilon_end, epsilon_decay)
-    torch.save(agent.q_network.state_dict(), f'weights_{training_episodes}.pth')
+    weights_path = os.path.join(weights_dir, f'weights_{training_episodes}.pth')
+    torch.save(agent.q_network.state_dict(), weights_path)
+
     for _ in range(training_episodes):
-        agent.q_network.load_state_dict(torch.load(f'weights_{training_episodes}.pth'))
+        agent.q_network.load_state_dict(torch.load(weights_path))
         play_game(agent, num_players)
-        torch.save(agent.q_network.state_dict(), f'weights_{training_episodes}.pth')
+        torch.save(agent.q_network.state_dict(), weights_path)
+
+# def train(training_episodes: int, num_players: int = 4):
+#     agent = DQLAgent(state_size, action_size, hidden_size, batch_size, learning_rate, gamma, epsilon_start, epsilon_end, epsilon_decay)
+#     torch.save(agent.q_network.state_dict(), f'weights_{training_episodes}.pth')
+#     for _ in range(training_episodes):
+#         agent.q_network.load_state_dict(torch.load(f'weights_{training_episodes}.pth'))
+#         play_game(agent, num_players)
+#         torch.save(agent.q_network.state_dict(), f'weights_{training_episodes}.pth')
     
