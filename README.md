@@ -1,6 +1,6 @@
 # AI-HS-gameplay
 
-AI Model to play the board game "High Society". Training the agent using Deep Q-learning. We train in two phases for now. First, we train against three random opponents - players we make moves completely randomly. Next, we train against earlier versions of itself in the training process. 
+AI Model to play the board game "High Society" - a board game that requires bidding strategically, memory of actions of opponents and incorporates delayed rewards. Training the agent using Deep Q-learning. We train in two phases for now. First, we train against three random opponents - players we make moves completely randomly. Next, we train against earlier versions of itself in the training process. 
 
 To train agent for 100 iterations, run:
 
