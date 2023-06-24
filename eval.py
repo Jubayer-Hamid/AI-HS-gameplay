@@ -1,5 +1,5 @@
 from q_network import DQLAgent, ReplayBuffer, Q_network, State
-from play import play_game
+from play import play_game, play_strategic_game
 import torch
 import os 
 
@@ -52,6 +52,33 @@ def eval_against_random_opponents(training_episodes:int=100, num_players:int=4):
     '''
     agent = DQLAgent(state_size, action_size, hidden_size, batch_size, learning_rate, gamma, epsilon_start, epsilon_end, epsilon_decay)
     weights_dir = 'Weights'
-    weights_path = os.path.join(weights_dir, f'weights_{training_episodes}.pth')
+    weights_path = os.path.join(weights_dir, f'weights_{training_episodes}_strategic.pth')
     agent.q_network.load_state_dict(torch.load(weights_path))
     play_game(agent, num_players)
+
+
+def eval_against_strategic_opponents(training_episodes:int=100, num_players:int=4):
+    '''
+    Play a game against 3 opponents that make random moves     
+    '''
+    agent = DQLAgent(state_size, action_size, hidden_size, batch_size, learning_rate, gamma, epsilon_start, epsilon_end, epsilon_decay)
+    weights_dir = 'Weights'
+    weights_path = os.path.join(weights_dir, f'weights_{training_episodes}_strategic.pth')
+    agent.q_network.load_state_dict(torch.load(weights_path))
+
+    opponent_1 = DQLAgent(state_size, action_size, hidden_size, batch_size, learning_rate, gamma, epsilon_start, epsilon_end, epsilon_decay)
+    weights_dir = 'Weights'
+    weights_path = os.path.join(weights_dir, f'weights_{training_episodes - 1}_strategic.pth')
+    opponent_1.q_network.load_state_dict(torch.load(weights_path))
+
+    opponent_2 = DQLAgent(state_size, action_size, hidden_size, batch_size, learning_rate, gamma, epsilon_start, epsilon_end, epsilon_decay)
+    weights_dir = 'Weights'
+    weights_path = os.path.join(weights_dir, f'weights_{training_episodes - 2}_strategic.pth')
+    opponent_2.q_network.load_state_dict(torch.load(weights_path))
+
+    opponent_3 = DQLAgent(state_size, action_size, hidden_size, batch_size, learning_rate, gamma, epsilon_start, epsilon_end, epsilon_decay)
+    weights_dir = 'Weights'
+    weights_path = os.path.join(weights_dir, f'weights_{training_episodes - 3}_strategic.pth')
+    opponent_3.q_network.load_state_dict(torch.load(weights_path))
+    
+    play_strategic_game(agent, opponent_1, opponent_2, opponent_3, 4)
