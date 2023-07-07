@@ -11,6 +11,12 @@ from eval import eval_against_random_opponents, eval_against_strategic_opponents
 #     main()
 
 def main(train_mode, strategic_mode, num_players, episodes):
+    '''
+    Train mode: train against opponents that make random moves first and then against earlier versions of itself. 
+                The convention here is to train against versions that have been trained for 5, 10 and 15 less episodes. 
+    Eval mode: Evaluate against either opponents that make strategic moves or those that make random moves. 
+    
+    '''
     if train_mode:
         train(episodes, num_players)
         train_strategic(episodes, num_players, episodes-5, episodes-10, episodes-15)
